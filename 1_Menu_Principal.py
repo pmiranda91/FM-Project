@@ -14,7 +14,7 @@ show_pages([
     Page('pages/2_Planejamento.py','CPT')
 ])
 
-pasta_datasets = Path(__file__).parent/'datasets'
+pasta_datasets = Path(__file__).parent/'assets'
 caminho_CPT = pasta_datasets/'CPT - MATRIZ.csv'
 df_CPT = pd.read_csv(caminho_CPT,decimal=',',sep=';')
 

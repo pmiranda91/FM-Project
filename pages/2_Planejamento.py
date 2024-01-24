@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 import pandas as pd
 
@@ -13,8 +13,9 @@ lista_valores = ['Espírito de Equipe','Respeito','Comprometimento','Coragem','C
 cat_ativ = ['Futebol de Rua', 'Atividade Técnica', 'Pequeno Jogo', 'Grande Jogo', 'Jogo Formal', 'Atividade Complementar']
 atv_comp = ['Psicologia', 'Fisiologia', 'Academia', 'Vídeo', 'Palestra','Aquecimento Dinâmico', 'Preventivo']
 carac_at = ['Recuperação', 'Quantidade', 'Regularidade','Rapidez','Revisão', 'Avaliação','Competição']
-categorias =['SUB 20','SUB 17','SUB 16','SUB 15','SUB 14','SUB 13','SUB 12','SUB 11','SUB 10','SUB 09']
+categorias =['SUB 20','SUB 2O-B','SUB 17','SUB 16','SUB 15','SUB 14','SUB 13','SUB 12','SUB 11','SUB 10','SUB 09']
 meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+dias_semana = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo']
 
 st.set_page_config(
     layout="wide"
@@ -510,7 +511,97 @@ if selected == "Planejamento":
 if selected == "Preparação":
     st.title(f"{selected}")
 if selected == "Microciclo":
-    st.title(f"{selected}")
+    data_micro = st.date_input("**Escolha a data desejada:**", value=datetime.today(),format='DD/MM/YYYY')
+    col1,col2,col3,col4,col5,col6,col7 = st.columns(7)
+    col1.write("**SEGUNDA**")
+    if dias_semana[data_micro.weekday()] == 'Segunda':
+            seg = data_micro.strftime("%d/%m/%Y")
+            col1.write(seg)
+    else:
+            seg = data_micro-timedelta(days=data_micro.weekday())
+            seg = seg.strftime("%d/%m/%Y")
+            col1.write(seg)
+    
+
+    col2.write("**TERÇA**")
+    if dias_semana[data_micro.weekday()] == 'Terça':
+            ter = data_micro.strftime("%d/%m/%Y")
+            col2.write(ter)
+    elif data_micro.weekday() == 0 :
+            ter = data_micro+timedelta(days=1)
+            ter = ter.strftime("%d/%m/%Y")
+            col2.write(ter)
+    else:
+            ter = data_micro-timedelta(days=(data_micro.weekday()-1))
+            ter = ter.strftime("%d/%m/%Y")
+            col2.write(ter)
+
+    col3.write("**QUARTA**")
+    if dias_semana[data_micro.weekday()] == 'Quarta':
+            qua = data_micro.strftime("%d/%m/%Y")
+            col3.write(qua)
+    elif data_micro.weekday() < 2 :
+            qua = data_micro+timedelta(days=(2-data_micro.weekday()))
+            qua = qua.strftime("%d/%m/%Y")
+            col3.write(qua)
+    else:
+            qua = data_micro-timedelta(days=(data_micro.weekday()-2))
+            qua = qua.strftime("%d/%m/%Y")
+            col3.write(qua)
+
+    col4.write("**QUINTA**")
+    if dias_semana[data_micro.weekday()] == 'Quinta':
+            qui = data_micro.strftime("%d/%m/%Y")
+            col4.write(qui)
+    elif data_micro.weekday() < 3 :
+            qui = data_micro+timedelta(days=(3-data_micro.weekday()))
+            qui = qui.strftime("%d/%m/%Y")
+            col4.write(qui)
+    else:
+            qui = data_micro-timedelta(days=(data_micro.weekday()-3))
+            qui = qui.strftime("%d/%m/%Y")
+            col4.write(qui)
+    
+    col5.write("**SEXTA**")
+    if dias_semana[data_micro.weekday()] == 'Sexta':
+            sex = data_micro.strftime("%d/%m/%Y")
+            col5.write(sex)
+    elif data_micro.weekday() < 4 :
+            sex = data_micro+timedelta(days=(4-data_micro.weekday()))
+            sex = sex.strftime("%d/%m/%Y")
+            col5.write(sex)
+    else:
+            sex = data_micro-timedelta(days=(data_micro.weekday()-4))
+            sex = sex.strftime("%d/%m/%Y")
+            col5.write(sex)
+    
+    col6.write("**SÁBADO**")
+    if dias_semana[data_micro.weekday()] == 'Sábado':
+            sab = data_micro.strftime("%d/%m/%Y")
+            col6.write(sab)
+    elif data_micro.weekday() < 5 :
+            sab = data_micro+timedelta(days=(5-data_micro.weekday()))
+            sab = sab.strftime("%d/%m/%Y")
+            col6.write(sab)
+    else:
+            sab = data_micro-timedelta(days=(data_micro.weekday()-5))
+            sab = sab.strftime("%d/%m/%Y")
+            col6.write(sab)
+
+    col7.write("**DOMINGO**")
+    if dias_semana[data_micro.weekday()] == 'Domingo':
+            dom = data_micro.strftime("%d/%m/%Y")
+            col7.write(dom)
+    else:
+            dom = data_micro+timedelta(days=6-data_micro.weekday())
+            dom = dom.strftime("%d/%m/%Y")
+            col7.write(dom)
+
+    id_seg_1 = cat+'-'+str(data_micro)+'-'+'Atividade 1'
+    with col1.expander("ATIVIDADE 1"):
+            st.write(df_CPT['NOME_DA_ATIVIDADE'][id_seg_1])
+
+
 if selected == "Controle":
     st.title(f"{selected}")
 if selected == "Individual":
