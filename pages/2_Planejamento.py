@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import pandas as pd
 
-pasta_datasets = Path(__file__).parent.parent/'datasets'
+pasta_datasets = Path(__file__).parent.parent/'assets'
 caminho_CPT = pasta_datasets/'CPT - MATRIZ.csv'
 df_CPT = pd.read_csv(caminho_CPT,decimal=',',sep=';',index_col=0)
 
