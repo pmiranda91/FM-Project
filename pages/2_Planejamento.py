@@ -11,9 +11,9 @@ df_CPT = pd.read_csv(caminho_CPT,decimal=',',sep=';',index_col=0)
 lista_atividades = ['Atividade 1','Atividade 2','Atividade 3','Atividade 4','Atividade 5','Atividade 6','Atividade 7','Atividade 8','Atividade 9']
 lista_valores = ['Espírito de Equipe','Respeito','Comprometimento','Coragem','Confiança']
 cat_ativ = ['Futebol de Rua', 'Atividade Técnica', 'Pequeno Jogo', 'Grande Jogo', 'Jogo Formal', 'Atividade Complementar']
-atv_comp = ['Psicologia', 'Fisiologia', 'Academia', 'Vídeo', 'Palestra','Aquecimento Dinâmico', 'Preventivo']
-carac_at = ['Recuperação', 'Quantidade', 'Regularidade','Rapidez','Revisão', 'Avaliação','Competição']
-categorias =['SUB 20','SUB 2O-B','SUB 17','SUB 16','SUB 15','SUB 14','SUB 13','SUB 12','SUB 11','SUB 10','SUB 09']
+atv_comp = ['Vazio','Psicologia', 'Fisiologia', 'Academia', 'Vídeo', 'Palestra','Aquecimento Dinâmico', 'Preventivo']
+carac_at = ['Vazio','Recuperação', 'Quantidade', 'Regularidade','Rapidez','Revisão', 'Avaliação','Competição']
+categorias =['SUB 20','SUB 20-B','SUB 17','SUB 16','SUB 15','SUB 14','SUB 13','SUB 12','SUB 11','SUB 10','SUB 09']
 meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
 dias_semana = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo']
 
@@ -50,6 +50,7 @@ if selected == "Planejamento":
         lateral = False
         col1,col2 = st.columns(2)
         data_selec = col1.date_input('**Inserir data:**',datetime.today(),format='DD/MM/YYYY')
+        data_selec2 = data_selec.strftime('%d/%m/%Y')
         ativ_selec = col2.selectbox('**Escolha a atividade:**',lista_atividades)
         col3,col5 = st.columns(2)
         inserir = col3.button(':heavy_plus_sign:',use_container_width=True)
@@ -198,22 +199,22 @@ if selected == "Planejamento":
                 comportamentos_final = ', '.join(comportamentos_final)
 
                 if cat_atv == 'Atividade Complementar':
-                        carac_ativ_final = ''
+                        carac_ativ_final = 'Vazio'
                         ativ_comp_final = ativ_comp
                 else:
-                        ativ_comp_final = ''
+                        ativ_comp_final = 'Vazio'
                         carac_ativ_final = carac_ativ
 
                 m = meses[data_selec.month-1]
                 y = data_selec.year
 
-                lista_adicionar = [cat,data_selec,m,y,ativ_selec,valores_final, principios_final,comportamentos_final,cat_atv,carac_ativ_final,ativ_comp_final,nome_at,desc_at,largura,comprimento,est,rec,rep,voltot,nota,(nota*voltot)/5]
-                df_CPT.loc[(cat+'-'+str(data_selec)+'-'+ativ_selec)] = lista_adicionar
+                lista_adicionar = [cat,data_selec2,m,y,ativ_selec,valores_final, principios_final,comportamentos_final,cat_atv,carac_ativ_final,ativ_comp_final,nome_at,desc_at,largura,comprimento,est,rec,rep,voltot,nota,(nota*voltot)/5]
+                df_CPT.loc[(cat+'-'+str(data_selec2)+'-'+ativ_selec)] = lista_adicionar
                 df_CPT.to_csv(caminho_CPT,decimal=',',sep=';')
                 col3.success("Atividade inserida com sucesso!")
 
         
-        id_remocao = cat+'-'+str(data_selec)+'-'+ativ_selec
+        id_remocao = cat+'-'+str(data_selec2)+'-'+ativ_selec
         if excluir:
                 if id_remocao not in df_CPT.index:
                         col5.error("Essa atividade ainda não foi inserida!")
@@ -246,8 +247,9 @@ if selected == "Planejamento":
                 
                 col24,col25 = st.columns(2)
                 data_selec_edit = col24.date_input('**Escolha a data:**',datetime.today(),format='DD/MM/YYYY')
+                data_selec2_edit = data_selec_edit.strftime('%d/%m/%Y')
                 ativ_selec_edit = col25.selectbox('**Escolha a atividade que deseja carregar:**',lista_atividades)
-                id_load = cat+'-'+str(data_selec_edit)+'-'+ativ_selec_edit
+                id_load = cat+'-'+str(data_selec2_edit)+'-'+ativ_selec_edit
                 col26,col27 =  st.columns(2)
                 m_edit = meses[data_selec_edit.month-1]
                 y_edit = data_selec_edit.year
@@ -390,14 +392,14 @@ if selected == "Planejamento":
                                 col36,col37,col38 =st.columns(3)
                                 cat_ativ_load_item = str(df_CPT['CATEGORIA_DE_ATIVIDADE'][id_load])
                                 cat_ativ_load = col36.selectbox("Categoria de Atividade carregada:",options=cat_ativ,index=cat_ativ.index(cat_ativ_load_item))
-                                if cat_ativ_load_item == 'Atividade Complementar':
+                                if cat_ativ_load == 'Atividade Complementar':
                                         ativ_comp_load_item = str(df_CPT['ATIVIDADE_COMPLEMENTAR'][id_load])
                                         ativ_comp_load = col38.selectbox("Atividade Complementar carregada:",options=atv_comp,index=atv_comp.index(ativ_comp_load_item))
-                                        carac_ativ_load = ""
+                                        carac_ativ_load = "Vazio"
                                 else:
                                         carac_ativ_load_item = str(df_CPT['CARACTERISTICA_DA_ATIVIDADE'][id_load])
                                         carac_ativ_load = col37.selectbox("Característica da Atividade carregada:",options=carac_at,index=carac_at.index(carac_ativ_load_item))
-                                        ativ_comp_load=""
+                                        ativ_comp_load="Vazio"
                                 st.divider()
 
                                 nome_at_load = st.text_input("**Nome da atividade carregada:**",value=str(df_CPT['NOME_DA_ATIVIDADE'][id_load]))
@@ -499,7 +501,7 @@ if selected == "Planejamento":
 
                         inserir2 = col26.button(":heavy_plus_sign: ",use_container_width=True,on_click=clicked,args=[2])
                         if inserir2:
-                                lista_adicionar2 = [cat,data_selec_edit,m_edit,y_edit,ativ_selec_edit,valores_final_load, principios_final_load,comportamentos_final_load,cat_ativ_load,carac_ativ_load,ativ_comp_load,nome_at_load,desc_at_load,largura_load,comprimento_load,est_load,rec_load,rep_load,voltot_load,nota_load,(nota_load*voltot_load)/5]
+                                lista_adicionar2 = [cat,data_selec2_edit,m_edit,y_edit,ativ_selec_edit,valores_final_load, principios_final_load,comportamentos_final_load,cat_ativ_load,carac_ativ_load,ativ_comp_load,nome_at_load,desc_at_load,largura_load,comprimento_load,est_load,rec_load,rep_load,voltot_load,nota_load,(nota_load*voltot_load)/5]
                                 df_CPT.loc[(id_load)] = lista_adicionar2
                                 df_CPT.to_csv(caminho_CPT,decimal=',',sep=';')
                                 col26.success("Atividade inserida com sucesso!")
@@ -597,9 +599,29 @@ if selected == "Microciclo":
             dom = dom.strftime("%d/%m/%Y")
             col7.write(dom)
 
-    id_seg_1 = cat+'-'+str(data_micro)+'-'+'Atividade 1'
-    with col1.expander("ATIVIDADE 1"):
-            st.write(df_CPT['NOME_DA_ATIVIDADE'][id_seg_1])
+    id_seg_1 = cat+'-'+seg+'-'+'Atividade 1'
+    if id_seg_1 in df_CPT.index:
+        col1.write("ATIVIDADE 1")
+        expander_seg1 = col1.expander(df_CPT['NOME_DA_ATIVIDADE'][id_seg_1])
+        expander_seg1.write(df_CPT['CATEGORIA_DE_ATIVIDADE'][id_seg_1])
+        expander_seg1.write(df_CPT['PRINCIPIOS_DE_JOGO'][id_seg_1])
+        expander_seg1.caption(df_CPT['DESCRICAO_DA_ATIVIDADE'][id_seg_1])
+        expander_seg1.write(str(df_CPT['VOLUME'][id_seg_1])+"("+str(df_CPT['REPETICAO'][id_seg_1])+"x"+str(df_CPT['ESTIMULO'][id_seg_1])+'/'+str(df_CPT['RECUPERACAO'][id_seg_1])+")")
+        expander_seg1.write(df_CPT['NOTA'][id_seg_1])
+
+    id_seg_2 = cat+'-'+seg+'-'+'Atividade 2'
+    if id_seg_2 in df_CPT.index:
+        col1.write("ATIVIDADE 2")
+        expander_seg1 = col1.expander(df_CPT['NOME_DA_ATIVIDADE'][id_seg_2])
+        expander_seg1.write(df_CPT['CATEGORIA_DE_ATIVIDADE'][id_seg_2])
+        expander_seg1.write(df_CPT['PRINCIPIOS_DE_JOGO'][id_seg_2])
+        expander_seg1.caption(df_CPT['DESCRICAO_DA_ATIVIDADE'][id_seg_2])
+        expander_seg1.write(str(df_CPT['VOLUME'][id_seg_2])+"("+str(df_CPT['REPETICAO'][id_seg_2])+"x"+str(df_CPT['ESTIMULO'][id_seg_2])+'/'+str(df_CPT['RECUPERACAO'][id_seg_2])+")")
+        expander_seg1.write(df_CPT['NOTA'][id_seg_2])
+
+
+
+                
 
 
 if selected == "Controle":
